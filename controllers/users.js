@@ -3,6 +3,8 @@ var router = express.Router();
 var bcrypt=require("bcrypt");
 
 var mongoose =  require('mongoose');
+var multer = require("multer");
+var fileUploadMid = multer({dest:"./public/imgs"});
 
 //get user model object to access users in mongodb
 var userModel = mongoose.model("users");
@@ -26,11 +28,15 @@ router.get("/register",function (req,res) {
 
 
 //save user
-router.post("/register",function (req,res) {
+router.post("/register",fileUploadMid.single("avatar"),function (req,res) {
 
   var user = req.body;
   //create unique id
   user._id = Date.now();
+  //get user image
+  fs.renameSync("./public/images/"+req.file.filename,"./public/images/"+req.file.originalname);
+
+  // user.image = req.file.originalname;
   //hash password
   var salt = bcrypt.genSaltSync();
   var hashedPassword = bcrypt.hashSync(req.body.password,salt);
