@@ -1,0 +1,58 @@
+
+URL: http://localhost:9090/contacts/addContact
+METHOD: POST
+BODY: {
+    "email":String,
+    "mobile":String (Optional),
+    "first_name":String,
+    "last_name":String,
+    "auth":String,
+    "device_token":String,
+    "finger_print":String
+  }
+RESPONSE: {
+    "statusCode": 200,
+    "message": "Success",
+    "data":[Contact Object] {
+        "email":String,
+        "mobile":String (Optional),
+        "first_name":String,
+        "last_name":String,
+        "auth":String,
+        "device_token":String,
+        "finger_print":String
+            "_id": timestamp,
+            "created_at": timestamp,
+            "__v": integer
+    }
+}
+
+====================================================================
+
+URL: http://localhost:9090/contacts/getList
+METHOD: POST
+BODY:{
+    "pageNum":Integer,
+    "auth":String,
+    "device_token":String,
+    "finger_print":String
+  }
+RESPONSE: {
+    "statusCode": 200,
+    "message": "Success",
+    "data": [Array of 5 Contacts based on pageNum]
+}
+
+=======================================================================
+URL: http://localhost:9090/contacts/getRecentList
+METHOD: POST
+BODY:{
+    "auth":String,
+    "device_token":String,
+    "finger_print":String
+  }
+RESPONSE: {
+    "statusCode": 200,
+    "message": "Success",
+    "data": [Array of 5 latest Contacts]
+}

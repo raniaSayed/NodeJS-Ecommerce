@@ -7,42 +7,18 @@ var app = express();
 var mongoose = require("mongoose");
 
 //connect to mongodb
-mongoose.connect("mongodb://localhost:27017/ecom_nodejs");
+mongoose.connect("mongodb://localhost:27017/contact_list");
 
 //create collections and register models
 fs.readdirSync(path.join(__dirname,"models")).forEach(function (filename) {
     require("./models/"+filename);
-    console.log( filename );
 });
 
+app.use(bodyParser.json());
 
-var session = require("express-session");
+var contacts = require('./controllers/contacts');
 
-// request.session
-app.use(session({
-  secret:"!@#$#@%#$^%!@#$%" ,
-  cookie:{maxAge: 60 * 60 * 24 * 7 * 1000 }
-}));
-
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-//routes
-var index = require('./controllers/index');
-var users = require('./controllers/users');
-var products = require('./controllers/products');
-
-//main routes
-app.use('/', index);
-app.use('/users', users);
-app.use('/products',products);
+app.use('/contacts',contacts);
 
 
 //This 2 middlewares must be last section in app.js as if request doesn't handle they will catch it
@@ -59,9 +35,9 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // return error message
   res.status(err.status || 500);
-  res.render('error');
+  res.json({message: res.locals.message,error:res.locals.error});
 });
 
 
